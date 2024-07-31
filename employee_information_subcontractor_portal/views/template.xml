@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_layout" name="Portal layout: Employee menu entry" inherit_id="portal.portal_breadcrumbs" priority="35">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="employee_info" class="breadcrumb-item active">
+                <t t-esc="employee_info.name"/>
+            </li>
+        </xpath>
+    </template>
+     <template id="portal_my_employee_information_form_custom" name="Employee Information Form">
+       <t t-call="portal.portal_layout">
+           <div id="wrap">
+               <div class="container">
+                   <div class="oe_structure">
+                <div t-if="prev_record or next_record" class="col flex-grow-0">
+                    <t t-call='portal.record_pager'/>
+                </div>
+           <t t-call="portal.portal_record_layout">
+               <t t-set="card_body">
+                <div class="row col-12">
+                    <div class='col-8'>
+                <strong>Employee Name:</strong>
+                <br></br><h4><b><span t-field="employee_info.name"/></b></h4>
+                <strong><span t-field="employee_info.job_title"/></strong>
+                </div>
+                <t t-if="employee_info.image_1920">
+                    <div class="row col-4 no-gutters">
+                       <div class="col-sm text-md-right">
+                            <img t-att-src="image_data_uri(employee_info.image_1920)" class="img o_image_128_max"/>
+                       </div>
+                   </div>
+                </t>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-12 col-md-6 mb-1">
+                        <strong>Work Mobile:</strong> <span t-field="employee_info.mobile_phone"/>
+                    </div>
+                   <div class="col-12 col-md-6 mb-1">
+                        <strong>Department:</strong> <span t-field="employee_info.department_id"/> 
+                    </div>
+                    <div class="col-12 col-md-6 mb-1">
+                       <strong>Work Phone:</strong> <span t-field="employee_info.work_phone"/>
+                    </div>
+                    <div class="col-12 col-md-6 mb-1">
+                       <strong>Employee Type:</strong> <span t-field="employee_info.employee_type"/>
+                    </div>
+                    <div class="col-12 col-md-6 mb-1">
+                       <strong>Work Email:</strong> <span t-field="employee_info.work_email"/>
+                    </div>
+                    <div class="col-12 col-md-6 mb-1">
+                       <strong>Manager:</strong> <span t-field="employee_info.parent_id"/>
+                    </div>
+                    <div class="col-12 col-md-6 mb-1">
+                    </div>
+                    <div class="col-12 col-md-6 mb-1">
+                       <strong>Coach:</strong> <span t-field="employee_info.coach_id"/>
+                    </div>
+                </div>
+               <h2><strong>Work Information:</strong></h2>
+                <h5><strong class="text-info">Location</strong></h5>
+                <div>
+                       <strong>Work Address:</strong>
+                        <span t-field="employee_info.address_id" context="{'show_address': 1}" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                </div>
+                <div>
+                       <strong>Work Location:</strong> <span t-field="employee_info.work_location_id"/>
+                </div>
+                <div>
+                    <h5><strong class="text-info">Schedule</strong></h5>
+                    <div class="row mb-4">
+                       <div class="col-12 col-md-6 mb-1">
+                           <strong>Resource Calendar:</strong> <span t-field="employee_info.resource_calendar_id"/>
+                       </div>
+                    </div>
+                </div>
+                </t>
+            </t>
+            </div>
+            </div>
+        </div>
+        </t>
+    </template>
+    <template id="portal_my_home_employee_information_customm" customize_show="True" inherit_id="portal.portal_my_home" priority="35">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Employee Information</t>
+                <t t-set="url" t-value="'/my/employee/information'"/>
+                <t t-set="placeholder_count" t-value="'employee_count_custom'"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>
