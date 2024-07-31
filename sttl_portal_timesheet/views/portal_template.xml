@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="portal_template_inherit" inherit_id="portal.portal_searchbar">
+        <!--Call Controller From Button-->
+        <xpath expr="//button[@class='navbar-toggler']" position="after">
+            <head>
+                <style>
+                  .left-button {
+                    float: left;
+                    border-radius: 0.25rem;
+                    margin-right: 400px;
+                    font-size: 1rem;
+                    color: #FFFFFF;
+                    background-color: #35979c;
+                    border: 1px solid transparent;
+                    padding: 0.375rem 0.75rem;
+                  }
+                </style>
+            </head>
+            <body>
+                <!--New Button Will Visible if Login User Assigned TO Any Task-->
+                <t t-if="assign_task_to_loginuser=='true'">
+                   <button t-if="page_name=='timesheet'" type="button" class="left-button" onclick="window.location.href='/open/timesheet'">New</button>
+                </t>
+            </body>
+        </xpath>
+    </template>
+
+    <template id="hr_timesheet_template_inherit" inherit_id="hr_timesheet.portal_my_timesheets">
+        <xpath expr="//t[@t-foreach='timesheets']/tr/td[6]" position="after">
+            <!--Call Edit Button-->
+            <!--Edit Button Will Visible if Login User Assigned TO Any Task-->
+                <t t-if="assign_task_to_loginuser=='true'">
+                    <td><a t-attf-href="/open/timesheet/#{timesheet.id}" class="btn btn-primary">Edit</a></td>
+                </t>
+        </xpath>
+    </template>
+
+<!--New Button-->
+    <template id="open_timesheet_form1" name="Timesheet Form">
+        <t t-call="website.layout">
+              <head>
+                   <style>
+                    .container {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 20vh;
+                    }
+                    form {
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content: center;
+                    }
+                    .form-group {
+                        margin: 10px;
+                    }
+                    .form-group label {
+                        display: block;
+                        margin-bottom: 5px;
+                    }
+                    .form-group input {
+                        width: 170px; /* Adjust width as needed */
+                    }
+                    button {
+                        margin-top: 40px;
+                        margin-bottom: 45px;
+
+                    }
+                    </style>
+              </head>
+              <body>
+                  <div class="container">
+                        <form role="form" action="/open/timesheet" method="POST">
+                            <div class="form-group">
+                                   <label for="date" class="control-label">Date</label>
+                                    <input type="date" name="date" t-att-value="date" id="date"
+                                    class="form-control" required="required"/>
+                                    <script>
+                                    window.onload = function() {
+                                        var today = new Date().toISOString().split('T')[0];
+                                        document.getElementById("date").setAttribute("max", today);
+                                    };
+                                    </script>
+                            </div>
+                            <div class="form-group new_button_class">
+                                    <label for="project_id" class="control-label">Project</label>
+                                    <select name="project_id" class="form-control" required="required" id="mySelectProject">
+                                            <option value=""> </option>
+                                            <t t-foreach="project_records" t-as="project">
+                                                <option t-esc="project"/>
+                                            </t>
+                                    </select>
+                            </div>
+                            <div class="form-group">
+                                    <label for="task" class="control-label">Task</label>
+                                    <select name="task" class="form-control" required="required" id="mySelect">
+                                           <option value=""> </option>
+                                            <t t-foreach="tasks_records" t-as="task">
+                                                <option t-esc="task.name"/>
+                                            </t>
+                                    </select>
+                            </div>
+                            <div class="form-group">
+                                    <label for="description" class="control-label">Description</label>
+                                    <input type="textarea" name="description" t-att-value="description" id="description"
+                                     class="form-control" required="required"/>
+                            </div>
+                            <div class="form-group">
+                                    <label for="hrs" class="control-label">Hours Spent</label>
+                                    <input type="time" name="hrs_spent" id="hrs" class="form-control" required="required" value="00:00" />
+
+                            </div>
+                            <button type="submit" class="btn btn-primary pull-left">Create</button>
+                        </form>
+                  </div>
+              </body>
+        </t>
+    </template>
+
+    <!--Edit Button-->
+     <template id="open_timesheet_edit_form" name="Timesheet Edit Form">
+<!--        <script type="text/javascript" src="/portal_template/static/src/js/custom.js">-->
+<!--        </script>-->
+        <t t-call="website.layout">
+              <head>
+                <style>
+                    .container {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 20vh;
+                    }
+                    form {
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content: center;
+                    }
+                    .form-group {
+                        margin: 10px;
+                    }
+                    .form-group label {
+                        display: block;
+                        margin-bottom: 5px;
+                    }
+                    .form-group input {
+                        width: 170px; /* Adjust width as needed */
+                    }
+                    button {
+                        margin-top: 40px;
+                        margin-bottom: 45px;
+
+                    }
+                </style>
+              </head>
+              <body>
+                  <div class="container">
+                        <form role="form" action="/update/edit_timesheet" method="POST">
+                               <div class="form-group">
+                                   <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                               </div>
+                               <!--Passing Timesheet Id in Template so can use on Update Button-->
+                               <div class="form-group">
+                                   <input type="hidden" name="timesheet_id" t-att-value="timesheet_id" id="timesheet_id"
+                                     class="form-control" readonly="1"/>
+                               </div>
+                                <div class="form-group">
+                                    <label for="date" class="control-label">Date</label>
+                                    <input type="date" name="date" t-att-value="date" id="date"
+                                    class="form-control" required="required"/>
+                                    <script>
+                                    window.onload = function() {
+                                        var today = new Date().toISOString().split('T')[0];
+                                        document.getElementById("date").setAttribute("max", today);
+                                    };
+                                    </script>
+                                </div>
+                                 <div class="form-group">
+                                    <label for="project" class="control-label">Project</label>
+                                     <input type="textarea" name="project" t-att-value="project" id="project"
+                                     class="form-control" required="required" readonly="1"/>
+                                 </div>
+                                 <div class="form-group">
+                                    <label for="task" class="control-label">Task</label>
+                                     <input type="textarea" name="task" t-att-value="task" id="task"
+                                     class="form-control" required="required" readonly="1"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="description" class="control-label">Description</label>
+                                     <input type="textarea" name="description" t-att-value="description" id="description"
+                                     class="form-control" required="required"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="hrs" class="control-label">Hours Spent</label>
+                                     <input type="time" name="hrs" t-att-value="hrs" id="hrs"
+                                     class="form-control" required="required" value="00:00"/>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary pull-left">Update</button>
+                        </form>
+                  </div>
+              </body>
+        </t>
+    </template>
+
+    <!--Timesheet Thanks Notification-->
+    <record id="timesheet_notification_record" model="website.page">
+        <field name="name">Thanks</field>
+        <field name="type">qweb</field>
+        <field name="url">/thank-you</field>
+        <field name="website_published">True</field>
+        <field name="key">sttl_portal_timesheet.timesheet_notification_record</field>
+        <field name="arch" type="xml">
+        <t name="Thanks" t-name="sttl_portal_timesheet.timesheet_notification_record">
+        <t t-call="website.layout">
+            <div id="wrap">
+            <div class="container">
+            <h1>Thanks!</h1>
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="alert alert-success" role="status">
+                          Record With Id <a t-attf-href="/my/timesheets"><t t-esc="id"/></a> has been saved Successfully
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </t>
+        </t>
+        </field>
+    </record>
+
+    <!--Restrict Edit Of Project-->
+    <record id="restrict_project_edit_record" model="website.page">
+        <field name="type">qweb</field>
+        <field name="url">/thank-you</field>
+        <field name="website_published">True</field>
+        <field name="key">sttl_portal_timesheet.restrict_project_edit_record</field>
+        <field name="arch" type="xml">
+        <t name="Thanks" t-name="sttl_portal_timesheet.restrict_project_edit_record">
+        <t t-call="website.layout">
+            <div id="wrap">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="alert alert-danger" role="status">
+                            You are Not Allowed To Edit This Timesheet <a href="/my/timesheets">Click Here</a> To Go Back
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </t>
+        </t>
+        </field>
+    </record>
+
+    <record id="project_task_inherit" model="ir.ui.view">
+        <field name="name">project.task.form</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_ids']" position="attributes">
+                <attribute name="domain">['|',('share','=',False),('share','=',True),('active','=',True)]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_employee_inherit_sttl" model="ir.ui.view">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='hr_settings']/group/group[@name='active_group']/field[@name='user_id']" position="replace">
+                <field name="user_id" string="Related User" context="{'allow_create_employee': False, 'default_create_employee': False}"/>
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <odoo>
+   <!--Portal/Public User Type Access-->
+
+    <record id="group_portal_timesheet_access" model="res.groups">
+        <field name="name">Timesheet Access to Portal and Public Users</field>
+        <field name="category_id" ref="base.module_category_website"/>
+        <field name="comment">Add portal users who should be allowed to edit their timesheets</field>
+    </record>
+
+    <record id="base.group_portal" model="res.groups">
+        <field name="name">Portal</field>
+        <field name="implied_ids" eval="[(4, ref('group_portal_timesheet_access'))]"/>
+    </record>
+
+    <record id="base.group_public" model="res.groups">
+        <field name="name">Public</field>
+        <field name="implied_ids" eval="[(4, ref('group_portal_timesheet_access'))]"/>
+    </record>
+
+<!--    For Portal/Public User Only-->
+<!--    <template id="portal_custom_header" inherit_id="portal.portal_my_home">-->
+<!--        <xpath expr="//h3[text()='Documents']" position="replace">-->
+<!--            <table>-->
+<!--                <tr>-->
+<!--                    <td>-->
+<!--                        <a t-if="request.env.user.has_group('portal_timesheet.group_portal_timesheet_access')"-->
+<!--                           href="/my/timesheets">-->
+<!--                            <h3>Documents</h3>-->
+<!--                        </a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--            </table>-->
+<!--        </xpath>-->
+<!--    </template>-->
+
+    </odoo>
