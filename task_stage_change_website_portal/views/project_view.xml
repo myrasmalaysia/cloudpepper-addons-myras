@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="project_form_view_inherit_custom_allow" model="ir.ui.view">
+            <field name="name">project.form.view.inherit.taskdone </field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook//page[@name='settings']//group//group" position="after">
+                    <group>
+                        <field name="is_customer_allow_change_stage"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

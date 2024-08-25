@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="task_type_form_inherit_stage_change_custom" model="ir.ui.view">
+            <field name="name">task.type.form.inherit.stage.change.custom</field>
+            <field name="model">project.task.type</field>
+            <field name="inherit_id" ref="project.task_type_edit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='project_ids']" position="after">
+                    <field name="is_customer_allow_change"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

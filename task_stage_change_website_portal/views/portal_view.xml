@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_task_inherit_custom_change_stage" inherit_id="project.portal_my_task" name="Portal: My Task to Change Stage">
+        <!--<xpath expr="//li[@id='nav-report']" position="after"> -->
+        <xpath expr="//li[@id='task-nav']" position="before">
+            <li class="list-group-item flex-grow-1">
+                <div class="change_stage d-grid">
+                <a t-if="task.project_id.is_customer_allow_change_stage == True" role="button" id="custom_change_task_stage" class="btn btn-secondary flex" data-bs-toggle="modal" data-bs-target="#change_stage" href="#"> <i class="fa fa-chevron-circle-right"/> Change Stage</a>
+                <input t-att-value="task.id" id="custom_project_task_id" type="hidden"/>
+            </div>
+            </li>
+            <div class="row">
+                <div id="change_stage" role="dialog" class="modal fade">
+                    <div class="modal-dialog modal-dialog-centered modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Change Task Stage</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="stage_change_form">  
+                                    <div t-attf-class="form-group col-xl-6">
+                                        <label class="col-form-label" for="current_stage">
+                                            <b>Current Stage </b>
+                                        </label>
+                                        <span class="form-control" t-esc="task.stage_id.name" readonly="readonly"/>
+                                    </div><br/>    
+                                    <div t-attf-class="form-group col-xl-6" id="new_stage">
+                                        <label for="stage_id">Changed to : </label><br/>
+                                        <t t-set="task_stages" t-value="task.get_task_stages_website_custom()"/>
+                                        <t t-foreach="task_stages" t-as="stage">
+                                            <input type="radio" id="stage_id" name="stages" t-att-value="stage.id"/>
+                                            <label style="font-weight:normal;" for="stage"><span t-esc="stage.name"/></label><br/>
+                                        </t>
+                                    </div>
+                                    <div id="change_button" align="left" style="margin-top:15px">
+                                        <a role="button" id="button_state_change_custom" class="btn btn-secondary pull-right mb32 flex" data-bs-dismiss="modal">Change</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>                       
+                </div>   
+            </div>
+        </xpath>
+    </template>
+</odoo>
